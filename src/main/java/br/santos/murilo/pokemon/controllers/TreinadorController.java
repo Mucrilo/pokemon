@@ -11,29 +11,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/pokemon")
-public class PokemonController {
+@RequestMapping("/treinador")
+public class TreinadorController {
 	
 	@GetMapping
-	public ResponseEntity<Object> getAllPokemons(){
+	public ResponseEntity<Object> getAllTreinadores(){
 
 		return ResponseEntity.status(HttpStatus.OK).body("Invocou o GET");
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> savePokemon(){
+	public ResponseEntity<Object> saveTreinador(){
 
 		return ResponseEntity.status(HttpStatus.OK).body("Invocou o POST");
 	}
 
 	@PutMapping ("/{id}")
-	public ResponseEntity<Object> updatePokemon( @PathVariable Integer id ){
+	public ResponseEntity<Object> updateTreinador( @PathVariable Integer id ){
 
 		return ResponseEntity.status(HttpStatus.OK).body("Invocou o PUT -> " + id);
 	}
 
 	@DeleteMapping ("/{id}")
-	public ResponseEntity<Object> deletePokemon( @PathVariable Integer id ){
+	public ResponseEntity<Object> deleteTreinador( @PathVariable Integer id ){
 
 		return ResponseEntity.status(HttpStatus.OK).body("Invocou o DELETE -> " + id);
 	}
