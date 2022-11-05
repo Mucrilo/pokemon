@@ -24,14 +24,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table (name = "tipos")
-public class Tipo {
+@Table (name = "habilidades")
+public class Habilidade {
 	@Id
 	@GeneratedValue (strategy = GenerationType.AUTO)
 	private Integer id;
 
 	@Column(nullable = false)
-	private String tipo;
+	private String habilidade;
 
 	@JsonBackReference
 	@ManyToMany

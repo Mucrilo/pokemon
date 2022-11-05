@@ -1,5 +1,7 @@
 package br.santos.murilo.pokemon.controllers;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -7,23 +9,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.santos.murilo.pokemon.models.dto.FraquezaDTO;
+import br.santos.murilo.pokemon.models.entity.Fraqueza;
+import br.santos.murilo.pokemon.models.repository.FraquezaRepository;
 
 @RestController
 @RequestMapping("/fraqueza")
 public class FraquezaController {
 	
+	@Autowired
+	FraquezaRepository fraquezaRepository;
+
 	@GetMapping
 	public ResponseEntity<Object> getAllFraquezas(){
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o GET");
+		return ResponseEntity.status(HttpStatus.OK).body(fraquezaRepository.findAll());
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> saveFraqueza(){
+	public ResponseEntity<Object> saveFraqueza(@RequestBody FraquezaDTO fraquezaDTO){
+		Fraqueza fraquezaEntity = new Fraqueza();
+		BeanUtils.copyProperties(fraquezaDTO, fraquezaEntity);
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o POST");
+		return ResponseEntity.status(HttpStatus.OK).body(fraquezaRepository.save(fraquezaEntity));
 	}
 
 	@PutMapping ("/{id}")
