@@ -72,7 +72,7 @@ public class PokebolaController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokebola não encontrado");
 		}
 
-		Pokebola atualizaPokebola = new Pokebola();
+		Pokebola atualizaPokebola = pokebolaExists.get();
 		BeanUtils.copyProperties(pokebolaDTO, atualizaPokebola);
 
 		Optional<Treinador> pokebolaTreinador = treinadorRepository.findById(pokebolaDTO.getIdTreinador());
