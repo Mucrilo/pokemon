@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PokebolaDTO {
-	private Integer tipo;
+	private String tipo;
 }

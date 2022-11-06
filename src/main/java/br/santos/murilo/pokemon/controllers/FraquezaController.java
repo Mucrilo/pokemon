@@ -1,5 +1,7 @@
 package br.santos.murilo.pokemon.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +41,30 @@ public class FraquezaController {
 	}
 
 	@PutMapping ("/{id}")
-	public ResponseEntity<Object> updateFraqueza( @PathVariable Integer id ){
+	public ResponseEntity<Object> updateFraqueza( @PathVariable Integer id, @RequestBody FraquezaDTO fraquezaDTO ){
+		Optional<Fraqueza> fraquezaExists = fraquezaRepository.findById(id);
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o PUT -> " + id);
+		if (!fraquezaExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
+
+		Fraqueza fraquezaEntity = fraquezaExists.get();
+
+		BeanUtils.copyProperties(fraquezaDTO, fraquezaEntity);
+
+		return ResponseEntity.status(HttpStatus.OK).body(fraquezaRepository.save(fraquezaEntity));
 	}
 
 	@DeleteMapping ("/{id}")
 	public ResponseEntity<Object> deleteFraqueza( @PathVariable Integer id ){
+		Optional<Fraqueza> fraquezaExists = fraquezaRepository.findById(id);
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o DELETE -> " + id);
+		if (!fraquezaExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
+
+		fraquezaRepository.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Fraqueza excluída com sucesso");
 	}
 }

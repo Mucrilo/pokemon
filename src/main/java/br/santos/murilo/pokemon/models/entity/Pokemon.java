@@ -1,5 +1,6 @@
 package br.santos.murilo.pokemon.models.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import lombok.Setter;
 @Table (name = "pokemons")
 public class Pokemon {
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Column(nullable = false)
@@ -58,13 +59,13 @@ public class Pokemon {
 
 	@JsonManagedReference
 	@ManyToMany (mappedBy = "pokemons", fetch = FetchType.LAZY)
-	private List<Tipo> tipos;
+	private List<Tipo> tipos = new ArrayList<Tipo>();
 
 	@JsonManagedReference
 	@ManyToMany (mappedBy = "pokemons", fetch = FetchType.LAZY)
-	private List<Habilidade> habilidades;
+	private List<Habilidade> habilidades = new ArrayList<Habilidade>();
 
 	@JsonManagedReference
 	@ManyToMany (mappedBy = "pokemons", fetch = FetchType.LAZY)
-	private List<Fraqueza> fraquezas;
+	private List<Fraqueza> fraquezas = new ArrayList<Fraqueza>();
 }

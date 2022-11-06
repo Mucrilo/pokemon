@@ -1,5 +1,7 @@
 package br.santos.murilo.pokemon.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +41,30 @@ public class TipoController {
 	}
 
 	@PutMapping ("/{id}")
-	public ResponseEntity<Object> updateTipo( @PathVariable Integer id ){
+	public ResponseEntity<Object> updateTipo( @PathVariable Integer id, @RequestBody TipoDTO tipoDTO ){
+		Optional<Tipo> tipoExists = tipoRepository.findById(id);
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o PUT -> " + id);
+		if (!tipoExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
+
+		Tipo tipoEntity = tipoExists.get();
+		
+        BeanUtils.copyProperties(tipoDTO, tipoEntity);
+
+		return ResponseEntity.status(HttpStatus.OK).body(tipoRepository.save(tipoEntity));
 	}
 
 	@DeleteMapping ("/{id}")
 	public ResponseEntity<Object> deleteTipo( @PathVariable Integer id ){
+		Optional<Tipo> tipoExists = tipoRepository.findById(id);
+		
+		if (!tipoExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o DELETE -> " + id);
+		tipoRepository.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Tipo excluído com sucesso");
 	}
 }

@@ -1,5 +1,7 @@
 package br.santos.murilo.pokemon.models.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +21,7 @@ public class PokemonDTO {
 	private Integer ataqueSP;
 	private Integer defesaSP;
 	private Integer velocidade;
+	private List<Integer> tipos;
+	private List<Integer> habilidades;
+	private List<Integer> fraquezas;
 }

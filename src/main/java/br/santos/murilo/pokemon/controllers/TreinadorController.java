@@ -1,5 +1,7 @@
 package br.santos.murilo.pokemon.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +41,30 @@ public class TreinadorController {
 	}
 
 	@PutMapping ("/{id}")
-	public ResponseEntity<Object> updateTreinador( @PathVariable Integer id ){
+	public ResponseEntity<Object> updateTreinador( @PathVariable Integer id, @RequestBody TreinadorDTO treinadorDTO ){
+		Optional<Treinador> treinadorExists = treinadorRepository.findById(id);
+		
+		if (!treinadorExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o PUT -> " + id);
+		Treinador treinadorEntity = treinadorExists.get();
+
+		BeanUtils.copyProperties(treinadorDTO, treinadorEntity);
+
+        return ResponseEntity.status(HttpStatus.OK).body(treinadorRepository.save(treinadorEntity));
 	}
 
 	@DeleteMapping ("/{id}")
 	public ResponseEntity<Object> deleteTreinador( @PathVariable Integer id ){
+		Optional<Treinador> treinadorExists = treinadorRepository.findById(id);
+		
+		if (!treinadorExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o DELETE -> " + id);
+		treinadorRepository.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Treinador excluído com sucesso");
 	}
 }

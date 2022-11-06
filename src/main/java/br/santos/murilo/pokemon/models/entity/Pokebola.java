@@ -23,11 +23,11 @@ import lombok.Setter;
 @Table (name = "pokebolas")
 public class Pokebola {
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Column(nullable = false)
-	private Integer tipo;
+	private String tipo;
 
 	@ManyToOne
 	@JoinColumn (name = "idTreinador")

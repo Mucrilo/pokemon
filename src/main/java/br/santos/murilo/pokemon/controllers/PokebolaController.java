@@ -1,5 +1,7 @@
 package br.santos.murilo.pokemon.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +41,30 @@ public class PokebolaController {
 	}
 
 	@PutMapping ("/{id}")
-	public ResponseEntity<Object> updatePokebola( @PathVariable Integer id ){
+	public ResponseEntity<Object> updatePokebola( @PathVariable Integer id, @RequestBody PokebolaDTO pokebolaDTO ){
+		Optional<Pokebola> pokebolaExists = pokebolaRepository.findById(id);
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o PUT -> " + id);
+		if(!pokebolaExists.isPresent() ){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
+
+		Pokebola pokebolaEntity = pokebolaExists.get();
+
+		BeanUtils.copyProperties(pokebolaDTO, pokebolaEntity);
+
+		return ResponseEntity.status(HttpStatus.OK).body(pokebolaRepository.save(pokebolaEntity));
 	}
 
 	@DeleteMapping ("/{id}")
 	public ResponseEntity<Object> deletePokebola( @PathVariable Integer id ){
+		Optional<Pokebola> pokebolaExists = pokebolaRepository.findById(id);
+		
+		if(!pokebolaExists.isPresent() ){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o DELETE -> " + id);
+		pokebolaRepository.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Pokebola excluída com sucesso");
 	}
 }

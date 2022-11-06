@@ -1,5 +1,7 @@
 package br.santos.murilo.pokemon.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +41,30 @@ public class HabilidadeController {
 	}
 
 	@PutMapping ("/{id}")
-	public ResponseEntity<Object> updateHabilidade( @PathVariable Integer id ){
+	public ResponseEntity<Object> updateHabilidade( @PathVariable Integer id, @RequestBody HabilidadeDTO habilidadeDTO ){
+		Optional<Habilidade> habilidadeExists = habilidadeRepository.findById(id);
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o PUT -> " + id);
+		if (!habilidadeExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
+
+		Habilidade habilidadeEntity = habilidadeExists.get();
+
+        BeanUtils.copyProperties(habilidadeDTO, habilidadeEntity);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(habilidadeRepository.save(habilidadeEntity));
 	}
 
 	@DeleteMapping ("/{id}")
 	public ResponseEntity<Object> deleteHabilidade( @PathVariable Integer id ){
+		Optional<Habilidade> habilidadeExists = habilidadeRepository.findById(id);
+		
+		if (!habilidadeExists.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+		}
 
-		return ResponseEntity.status(HttpStatus.OK).body("Invocou o DELETE -> " + id);
+		habilidadeRepository.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Habilidade excluída com sucesso");
 	}
 }
