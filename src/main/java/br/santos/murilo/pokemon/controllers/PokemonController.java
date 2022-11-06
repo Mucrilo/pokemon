@@ -93,11 +93,40 @@ public class PokemonController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
 		}
 
-		Pokemon pokemonEntity = pokemonExists.get();
+		Pokemon atualizarPokemon = pokemonExists.get();
+		BeanUtils.copyProperties(pokemonDTO, atualizarPokemon);
 
-		BeanUtils.copyProperties(pokemonDTO, pokemonEntity);
+		for (Integer idTipos: pokemonDTO.getTipos()){
+			Optional<Tipo> pokemonTipo = tipoRepository.findById(idTipos);
 
-		return ResponseEntity.status(HttpStatus.OK).body(pokemonRepository.save(pokemonEntity));
+			if (!pokemonTipo.isPresent()){
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo "+ idTipos +" não encontrado");
+			}
+
+			atualizarPokemon.getTipos().add(pokemonTipo.get());
+		}
+
+		for (Integer idHabilidades: pokemonDTO.getHabilidades()){
+			Optional<Habilidade> pokemonHabilidade = habilidadeRepository.findById(idHabilidades);
+
+			if (!pokemonHabilidade.isPresent()){
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Habilidade "+ idHabilidades +" não encontrada");
+			}
+
+			atualizarPokemon.getHabilidades().add(pokemonHabilidade.get());
+		}
+
+		for (Integer idFraquezas: pokemonDTO.getFraquezas()){
+			Optional<Fraqueza> pokemonFraqueza = fraquezaRepository.findById(idFraquezas);
+
+			if (!pokemonFraqueza.isPresent()){
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fraqueza "+ idFraquezas +" não encontrada");
+			}
+
+			atualizarPokemon.getFraquezas().add(pokemonFraqueza.get());
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(pokemonRepository.save(atualizarPokemon));
 	}
 
 	@DeleteMapping ("/{id}")

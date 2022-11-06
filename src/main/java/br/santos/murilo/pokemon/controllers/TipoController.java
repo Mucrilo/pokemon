@@ -34,10 +34,10 @@ public class TipoController {
 
 	@PostMapping
 	public ResponseEntity<Object> saveTipo(@RequestBody TipoDTO tipoDTO){
-		Tipo tipoEntity = new Tipo();
-		BeanUtils.copyProperties(tipoDTO, tipoEntity);
+		Tipo novoTipo = new Tipo();
+		BeanUtils.copyProperties(tipoDTO, novoTipo);
 
-		return ResponseEntity.status(HttpStatus.OK).body(tipoRepository.save(tipoEntity));
+		return ResponseEntity.status(HttpStatus.OK).body(tipoRepository.save(novoTipo));
 	}
 
 	@PutMapping ("/{id}")
@@ -48,11 +48,11 @@ public class TipoController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
 		}
 
-		Tipo tipoEntity = tipoExists.get();
+		Tipo atualizaTipo = tipoExists.get();
 		
-        BeanUtils.copyProperties(tipoDTO, tipoEntity);
+        BeanUtils.copyProperties(tipoDTO, atualizaTipo);
 
-		return ResponseEntity.status(HttpStatus.OK).body(tipoRepository.save(tipoEntity));
+		return ResponseEntity.status(HttpStatus.OK).body(tipoRepository.save(atualizaTipo));
 	}
 
 	@DeleteMapping ("/{id}")

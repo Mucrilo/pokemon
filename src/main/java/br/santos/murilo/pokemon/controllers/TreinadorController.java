@@ -34,10 +34,10 @@ public class TreinadorController {
 
 	@PostMapping
 	public ResponseEntity<Object> saveTreinador(@RequestBody TreinadorDTO treinadorDTO){
-		Treinador treinadorEntity = new Treinador();
-		BeanUtils.copyProperties(treinadorDTO, treinadorEntity);
+		Treinador novoTreinador = new Treinador();
+		BeanUtils.copyProperties(treinadorDTO, novoTreinador);
 
-		return ResponseEntity.status(HttpStatus.OK).body(treinadorRepository.save(treinadorEntity));
+		return ResponseEntity.status(HttpStatus.OK).body(treinadorRepository.save(novoTreinador));
 	}
 
 	@PutMapping ("/{id}")
@@ -48,11 +48,11 @@ public class TreinadorController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
 		}
 
-		Treinador treinadorEntity = treinadorExists.get();
+		Treinador atualizaTreinador = treinadorExists.get();
 
-		BeanUtils.copyProperties(treinadorDTO, treinadorEntity);
+		BeanUtils.copyProperties(treinadorDTO, atualizaTreinador);
 
-        return ResponseEntity.status(HttpStatus.OK).body(treinadorRepository.save(treinadorEntity));
+        return ResponseEntity.status(HttpStatus.OK).body(treinadorRepository.save(atualizaTreinador));
 	}
 
 	@DeleteMapping ("/{id}")

@@ -34,10 +34,10 @@ public class FraquezaController {
 
 	@PostMapping
 	public ResponseEntity<Object> saveFraqueza(@RequestBody FraquezaDTO fraquezaDTO){
-		Fraqueza fraquezaEntity = new Fraqueza();
-		BeanUtils.copyProperties(fraquezaDTO, fraquezaEntity);
+		Fraqueza novaFraqueza = new Fraqueza();
+		BeanUtils.copyProperties(fraquezaDTO, novaFraqueza);
 
-		return ResponseEntity.status(HttpStatus.OK).body(fraquezaRepository.save(fraquezaEntity));
+		return ResponseEntity.status(HttpStatus.OK).body(fraquezaRepository.save(novaFraqueza));
 	}
 
 	@PutMapping ("/{id}")
@@ -48,11 +48,11 @@ public class FraquezaController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
 		}
 
-		Fraqueza fraquezaEntity = fraquezaExists.get();
+		Fraqueza atualizaFraqueza = fraquezaExists.get();
 
-		BeanUtils.copyProperties(fraquezaDTO, fraquezaEntity);
+		BeanUtils.copyProperties(fraquezaDTO, atualizaFraqueza);
 
-		return ResponseEntity.status(HttpStatus.OK).body(fraquezaRepository.save(fraquezaEntity));
+		return ResponseEntity.status(HttpStatus.OK).body(fraquezaRepository.save(atualizaFraqueza));
 	}
 
 	@DeleteMapping ("/{id}")

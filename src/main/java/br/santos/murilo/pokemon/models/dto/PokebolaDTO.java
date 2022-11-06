@@ -11,4 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PokebolaDTO {
 	private String tipo;
+	private Integer idTreinador;
+	private Integer idPokemon;
 }

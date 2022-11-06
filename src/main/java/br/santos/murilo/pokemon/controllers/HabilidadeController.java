@@ -34,10 +34,10 @@ public class HabilidadeController {
 
 	@PostMapping
 	public ResponseEntity<Object> saveHabilidade(@RequestBody HabilidadeDTO habilidadeDTO){
-		Habilidade habilidadeEntity = new Habilidade();
-		BeanUtils.copyProperties(habilidadeDTO, habilidadeEntity);
+		Habilidade novaHabilidade = new Habilidade();
+		BeanUtils.copyProperties(habilidadeDTO, novaHabilidade);
 
-		return ResponseEntity.status(HttpStatus.OK).body(habilidadeRepository.save(habilidadeEntity));
+		return ResponseEntity.status(HttpStatus.OK).body(habilidadeRepository.save(novaHabilidade));
 	}
 
 	@PutMapping ("/{id}")
@@ -48,11 +48,11 @@ public class HabilidadeController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
 		}
 
-		Habilidade habilidadeEntity = habilidadeExists.get();
+		Habilidade atualizaHabiliade = habilidadeExists.get();
 
-        BeanUtils.copyProperties(habilidadeDTO, habilidadeEntity);
+        BeanUtils.copyProperties(habilidadeDTO, atualizaHabiliade);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(habilidadeRepository.save(habilidadeEntity));
+		return ResponseEntity.status(HttpStatus.OK).body(habilidadeRepository.save(atualizaHabiliade));
 	}
 
 	@DeleteMapping ("/{id}")

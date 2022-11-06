@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.santos.murilo.pokemon.models.dto.PokebolaDTO;
 import br.santos.murilo.pokemon.models.entity.Pokebola;
+import br.santos.murilo.pokemon.models.entity.Pokemon;
+import br.santos.murilo.pokemon.models.entity.Treinador;
 import br.santos.murilo.pokemon.models.repository.PokebolaRepository;
+import br.santos.murilo.pokemon.models.repository.PokemonRepository;
+import br.santos.murilo.pokemon.models.repository.TreinadorRepository;
 
 @RestController
 @RequestMapping("/pokebola")
@@ -25,6 +29,12 @@ public class PokebolaController {
 
 	@Autowired
 	PokebolaRepository pokebolaRepository;
+
+	@Autowired
+	TreinadorRepository treinadorRepository;
+
+	@Autowired
+	PokemonRepository pokemonRepository;
 	
 	@GetMapping
 	public ResponseEntity<Object> getAllPokebolas(){
@@ -34,29 +44,56 @@ public class PokebolaController {
 
 	@PostMapping
 	public ResponseEntity<Object> savePokebola(@RequestBody PokebolaDTO pokebolaDTO){
-		Pokebola pokebolaEntity = new Pokebola();
-		BeanUtils.copyProperties(pokebolaDTO, pokebolaEntity);
+		Pokebola novaPokebola = new Pokebola();
+		BeanUtils.copyProperties(pokebolaDTO, novaPokebola);
 
-		return ResponseEntity.status(HttpStatus.OK).body(pokebolaRepository.save(pokebolaEntity));
+		Optional<Treinador> pokebolaTreinador = treinadorRepository.findById(pokebolaDTO.getIdTreinador());
+		
+		if(pokebolaTreinador.isPresent()){
+			novaPokebola.setTreinador(pokebolaTreinador.get());
+		}
+
+		Optional<Pokemon> pokebolaPokemon = pokemonRepository.findById(pokebolaDTO.getIdPokemon());
+		
+		if(pokebolaPokemon.isPresent()){
+			novaPokebola.setPokemon(pokebolaPokemon.get());
+		}else{
+			novaPokebola.setPokemon(null);
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(pokebolaRepository.save(novaPokebola));
 	}
 
 	@PutMapping ("/{id}")
-	public ResponseEntity<Object> updatePokebola( @PathVariable Integer id, @RequestBody PokebolaDTO pokebolaDTO ){
+	public ResponseEntity<Object> updatePokebola(@PathVariable Integer id, @RequestBody PokebolaDTO pokebolaDTO ){
 		Optional<Pokebola> pokebolaExists = pokebolaRepository.findById(id);
 
 		if(!pokebolaExists.isPresent() ){
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pokebola não encontrado");
 		}
 
-		Pokebola pokebolaEntity = pokebolaExists.get();
+		Pokebola atualizaPokebola = new Pokebola();
+		BeanUtils.copyProperties(pokebolaDTO, atualizaPokebola);
 
-		BeanUtils.copyProperties(pokebolaDTO, pokebolaEntity);
+		Optional<Treinador> pokebolaTreinador = treinadorRepository.findById(pokebolaDTO.getIdTreinador());
+		
+		if(pokebolaTreinador.isPresent()){
+			atualizaPokebola.setTreinador(pokebolaTreinador.get());
+		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(pokebolaRepository.save(pokebolaEntity));
+		Optional<Pokemon> pokebolaPokemon = pokemonRepository.findById(pokebolaDTO.getIdPokemon());
+		
+		if(pokebolaPokemon.isPresent()){
+			atualizaPokebola.setPokemon(pokebolaPokemon.get());
+		}else{
+			atualizaPokebola.setPokemon(null);
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(pokebolaRepository.save(atualizaPokebola));
 	}
 
 	@DeleteMapping ("/{id}")
-	public ResponseEntity<Object> deletePokebola( @PathVariable Integer id ){
+	public ResponseEntity<Object> deletePokebola(@PathVariable Integer id ){
 		Optional<Pokebola> pokebolaExists = pokebolaRepository.findById(id);
 		
 		if(!pokebolaExists.isPresent() ){
